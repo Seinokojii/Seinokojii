@@ -12,7 +12,7 @@ taking a full analytics-engineering stack apart and putting it back together in 
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/repo-roadmap.svg" width="860" alt="analytics-engineer-roadmap — Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day"></a>
+<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/repo-roadmap.svg?v=2" width="860" alt="analytics-engineer-roadmap — Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day"></a>
 
 <br>
 
