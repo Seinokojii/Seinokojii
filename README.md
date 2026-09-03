@@ -16,7 +16,7 @@ taking a full analytics-engineering stack apart and putting it back together in 
 
 <br>
 
-<img src="./assets/activity.284fa743.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.5afb5ef4.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
