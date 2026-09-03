@@ -12,14 +12,8 @@ taking a full analytics-engineering stack apart and putting it back together in 
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap">
-  <img src="./assets/repo-roadmap.svg" width="420" alt="analytics-engineer-roadmap — full AE stack, built day by day">
-</a>
-<a href="https://github.com/Seinokojii/37BOT">
-  <img src="./assets/repo-37bot.svg" width="420" alt="37BOT — Telegram bot">
-</a>
+<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/repo-roadmap.svg" width="860" alt="analytics-engineer-roadmap — Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day"></a>
 
-<br>
 <br>
 
 **Now** — going through the roadmap one day at a time: one concept, one thing built by hand,

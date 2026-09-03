@@ -58,7 +58,7 @@ def repo_card(repo, blurb, path):
     langs = gh(f"repos/Seinokojii/{repo}/languages")
     lang = max(langs, key=langs.get) if langs else "—"
     when = datetime.datetime.strptime(d["pushed_at"], "%Y-%m-%dT%H:%M:%SZ")
-    w, h = 420, 150
+    w, h = 860, 150
     dot = LANG_DOT.get(lang, MUTED)
     body = (label(56, 36, "repository")
             + value(56, 68, repo, size=17)
@@ -72,7 +72,7 @@ def repo_card(repo, blurb, path):
 
 if __name__ == "__main__":
     stack_panel(os.path.join(HERE, "stack.svg"))
-    repo_card("analytics-engineer-roadmap", "Full AE stack, built day by day",
+    repo_card("analytics-engineer-roadmap",
+              "Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day",
               os.path.join(HERE, "repo-roadmap.svg"))
-    repo_card("37BOT", "Telegram bot", os.path.join(HERE, "repo-37bot.svg"))
     print("panels rebuilt")
