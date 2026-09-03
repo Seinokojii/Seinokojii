@@ -8,15 +8,15 @@ taking a full analytics-engineering stack apart and putting it back together in 
 
 <br>
 
-<img src="./assets/stack.39003122.svg" width="100%" alt="Stack — warehouse: Snowflake, PostgreSQL. Transform: dbt, SQL, Python. Orchestration: Dagster. Ingestion: Airbyte. BI: Lightdash. Runtime: Docker, Linux.">
+<img src="{{stack}}" width="100%" alt="Stack — warehouse: Snowflake, PostgreSQL. Transform: dbt, SQL, Python. Orchestration: Dagster. Ingestion: Airbyte. BI: Lightdash. Runtime: Docker, Linux.">
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/repo.fd31ae97.svg" width="100%" alt="Current work: analytics-engineer-roadmap — Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day"></a>
+<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="{{repo}}" width="100%" alt="Current work: analytics-engineer-roadmap — Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day"></a>
 
 <br>
 
-<img src="./assets/activity.284fa743.svg" width="100%" alt="Contribution activity over the last year">
+<img src="{{activity}}" width="100%" alt="Contribution activity over the last year">
 
 <br>
 

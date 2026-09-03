@@ -1,0 +1,36 @@
+name: Refresh profile panels
+
+# The contribution heatmap goes stale the moment a commit lands, so the panels
+# are rebuilt from the GitHub API every night. build.py names each file after a
+# hash of its own contents, which is what makes GitHub's image proxy refetch it.
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - "assets/build.py"
+      - "assets/README.tmpl.md"
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild panels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 assets/build.py
+
+      - name: Commit if anything changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "Refresh profile panels"
+          git push
