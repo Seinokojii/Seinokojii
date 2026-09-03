@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
 BG, LINE, TEXT, MUTED, ACCENT = "#1F2933", "#2C3644", "#C2BEC3", "#8A93A0", "#84A8CD"
+HERO = "#1B2531"   # the hero panel sits one step deeper than the rest
 EMPTY = "#242B37"
 RAMP = ["#33465A", "#4A6D8F", "#6B93BC", "#84A8CD"]
 SANS = "system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
@@ -73,14 +74,20 @@ def graphql(query):
     return json.loads(out)["data"]
 
 
-def panel(height, body):
-    """A card in the Saku palette with the accent hairline down its left edge."""
+def panel(height, body, hairline=False, fill=BG):
+    """A card in the Saku palette.
+
+    The accent hairline is reserved for the hero panel. Repeating it on every
+    card turned the page into five identical slabs; the other panels carry
+    their own accent already — ramp bars, timeline dots, heatmap cells.
+    """
+    edge = (f'<rect x="28" y="28" width="2" height="{height-56}" fill="{ACCENT}" '
+            f'opacity="0.4"/>') if hairline else ""
     return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{height}" '
             f'viewBox="0 0 {W} {height}" role="img">'
             f'<rect x="0.5" y="0.5" width="{W-1}" height="{height-1}" rx="8" '
-            f'fill="{BG}" stroke="{LINE}"/>'
-            f'<rect x="28" y="28" width="2" height="{height-56}" fill="{ACCENT}" opacity="0.4"/>'
-            f'{body}</svg>')
+            f'fill="{fill}" stroke="{LINE}"/>'
+            f'{edge}{body}</svg>')
 
 
 def eyebrow(x, y, s):
@@ -186,7 +193,7 @@ def pipeline_panel():
     line = f"Python · DuckDB locally, Snowflake by changing a target · pushed {when}"
     fits(x0 + 24, line, 17, where="pipeline/footer")
     parts.append(text(x0 + 24, foot, line, size=17, fill=MUTED))
-    return panel(foot + 34, "".join(parts))
+    return panel(foot + 34, "".join(parts), hairline=True, fill=HERO)
 
 
 QUALITY = [
@@ -314,6 +321,47 @@ def emit(prefix, svg):
     return f"./assets/{name}"
 
 
+MONTHS = [
+    ("Foundations", "Days 1-30",
+     "SQL from joins to window functions, Python to pandas and Polars, "
+     "first ETL patterns"),
+    ("Advanced SQL, testing, dbt", "Days 31-60",
+     "Recursive CTEs, QUALIFY, MERGE, EXPLAIN ANALYZE; dbt models, macros, "
+     "snapshots, contracts; pytest and Great Expectations"),
+    ("Orchestration and cloud", "Days 61-90",
+     "Dagster software-defined assets, partitions and sensors; Snowflake "
+     "architecture and loading; self-hosted Airbyte; the first end-to-end "
+     "pipeline with tests, CI and docs"),
+    ("Snowflake architecture", "Days 91-130",
+     "Time travel, zero-copy clone, streams and tasks, Snowpipe; medallion "
+     "layering; MetricFlow; FastAPI as a data API"),
+    ("Semantics, BI and portfolio", "Days 131-165",
+     "Lightdash on top of the semantic layer, then three portfolio builds"),
+]
+
+
+def recent_section():
+    """The day-by-day log, taken from the roadmap's own feat: commits."""
+    commits = gh("repos/%s/analytics-engineer-roadmap/commits?per_page=40" % USER)
+    lines = []
+    for c in commits:
+        subject = c["commit"]["message"].split("\n")[0]
+        if not subject.startswith("feat:"):
+            continue
+        title = subject[5:].strip()
+        when = datetime.strptime(c["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%SZ")
+        url = c["html_url"]
+        lines.append(f'- [{title}]({url}) &nbsp;<sub>{when.strftime("%d %b %Y")}</sub>')
+        if len(lines) == 5:
+            break
+    return "\n".join(lines)
+
+
+def curriculum_section():
+    rows = "\n".join(f"| **{name}** | {days} | {detail} |" for name, days, detail in MONTHS)
+    return ("| Block | | Covered |\n|---|---|---|\n" + rows)
+
+
 def render_readme(paths):
     tmpl = open(os.path.join(HERE, "README.tmpl.md")).read()
     for key, path in paths.items():
@@ -323,6 +371,8 @@ def render_readme(paths):
 
 if __name__ == "__main__":
     paths = {
+        "recent": recent_section(),
+        "curriculum": curriculum_section(),
         "pipeline": emit("pipeline", pipeline_panel()),
         "stack": emit("stack", stack_panel()),
         "quality": emit("quality", quality_panel()),
@@ -330,4 +380,4 @@ if __name__ == "__main__":
         "activity": emit("activity", activity_panel()),
     }
     render_readme(paths)
-    print("\n".join(f"{k:10} {v}" for k, v in paths.items()))
+    print("\n".join(f"{k:10} {v}" for k, v in paths.items() if v.endswith(".svg")))

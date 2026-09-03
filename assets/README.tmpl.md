@@ -8,7 +8,13 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="{{pipeline}}" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to BI, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
+<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="{{pipeline}}" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
+
+### Recent work
+
+<!-- recent starts -->
+{{recent}}
+<!-- recent ends -->
 
 <br>
 
@@ -16,11 +22,23 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-<img src="{{stack}}" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
+<img src="{{journey}}" width="100%" alt="Progress through the roadmap: foundations, dbt end to end, orchestration and cloud are done; Snowflake architecture is current; semantics and BI come next.">
+
+<details>
+<summary>The full curriculum, block by block</summary>
 
 <br>
 
-<img src="{{journey}}" width="100%" alt="Progress through the roadmap: foundations, dbt end to end, orchestration and cloud are done; Snowflake architecture is current; semantics and BI come next.">
+{{curriculum}}
+
+Each block ends with a project that has to run from a clean checkout, not a notebook
+that only works on my machine.
+
+</details>
+
+<br>
+
+<img src="{{stack}}" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
 
 <br>
 
@@ -31,4 +49,4 @@ open, one working piece at a time, and reproducible from a clean checkout.
 A test suite that has never failed is an unverified test suite, so the roadmap repository
 corrupts its own warehouse on purpose, asserts the tests go red, and restores it.
 
-<sub>アナリティクス・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　panels rebuilt nightly from the GitHub API by <a href="./assets/build.py">assets/build.py</a></sub>
+<sub>アナリティクス・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　this page rebuilds itself nightly from the GitHub API — <a href="./assets/build.py">assets/build.py</a></sub>
