@@ -116,7 +116,7 @@ STACK = [
 def stack_panel():
     """One column with a fixed label gutter: the two-column version clipped
     'dbt Semantic Layer, MetricFlow, Lightdash' at the panel edge."""
-    x0, gutter, rowh, y0 = 64, 210, 54, 116
+    x0, gutter, rowh, y0 = 64, 176, 54, 116
     parts = [eyebrow(x0, 62, "stack")]
     for i, (k, v) in enumerate(STACK):
         y = y0 + i * rowh
@@ -348,7 +348,7 @@ def recent_section():
         subject = c["commit"]["message"].split("\n")[0]
         if not subject.startswith("feat:"):
             continue
-        title = subject[5:].strip()
+        title = subject[5:].strip().replace("->", "\u2192")
         when = datetime.strptime(c["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%SZ")
         url = c["html_url"]
         lines.append(f'- [{title}]({url}) &nbsp;<sub>{when.strftime("%d %b %Y")}</sub>')
@@ -359,7 +359,7 @@ def recent_section():
 
 def curriculum_section():
     rows = "\n".join(f"| **{name}** | {days} | {detail} |" for name, days, detail in MONTHS)
-    return ("| Block | | Covered |\n|---|---|---|\n" + rows)
+    return ("| Block | Days | Covered |\n|---|---|---|\n" + rows)
 
 
 def render_readme(paths):

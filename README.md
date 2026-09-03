@@ -17,7 +17,7 @@ open, one working piece at a time, and reproducible from a clean checkout.
 - [Days 91-93 Time Travel + Zero Copy Clone](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/354f44df208143d735614b3db5e1a2386091cda1) &nbsp;<sub>22 Aug 2026</sub>
 - [Days 89-90 documentation + GitHub](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/64fd4facec9c2b5bf0ef65c3b96195d843a610a8) &nbsp;<sub>13 Aug 2026</sub>
 - [Days 86-88 testing + monitoring (dbt-expectations, Elementary, CI, Docker)](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/295426433feaa7d4c3b33ca14c3a6f8b98b2ed69) &nbsp;<sub>12 Aug 2026</sub>
-- [Days 81-85 production pipeline Airbyte -> dbt -> marts on Dagster](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/be5f6cd4b39d87877b9fb06968e175f5b31cb2ec) &nbsp;<sub>07 Aug 2026</sub>
+- [Days 81-85 production pipeline Airbyte → dbt → marts on Dagster](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/be5f6cd4b39d87877b9fb06968e175f5b31cb2ec) &nbsp;<sub>07 Aug 2026</sub>
 <!-- recent ends -->
 
 <br>
@@ -33,7 +33,7 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-| Block | | Covered |
+| Block | Days | Covered |
 |---|---|---|
 | **Foundations** | Days 1-30 | SQL from joins to window functions, Python to pandas and Polars, first ETL patterns |
 | **Advanced SQL, testing, dbt** | Days 31-60 | Recursive CTEs, QUALIFY, MERGE, EXPLAIN ANALYZE; dbt models, macros, snapshots, contracts; pytest and Great Expectations |
@@ -48,11 +48,11 @@ that only works on my machine.
 
 <br>
 
-<img src="./assets/stack.782d1b65.svg" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
+<img src="./assets/stack.6f139fcf.svg" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
 
 <br>
 
-<img src="./assets/activity.e984ffe4.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.fa5274f9.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
