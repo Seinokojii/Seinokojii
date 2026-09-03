@@ -24,7 +24,7 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-<img src="./assets/activity.258b2140.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.03669c8b.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
