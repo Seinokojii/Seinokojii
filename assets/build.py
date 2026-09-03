@@ -17,6 +17,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 from datetime import datetime
 
 USER = "Seinokojii"
@@ -29,6 +30,34 @@ RAMP = ["#33465A", "#4A6D8F", "#6B93BC", "#84A8CD"]
 SANS = "system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif"
 MONO = "ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace"
 W = 860
+
+
+RIGHT_EDGE = W - 64
+
+
+def fits(x, string, size, family=None, where=""):
+    """Warns when a string would run past the panel's right margin.
+
+    An SVG has no layout engine, so overflow is invisible until the page is
+    rendered. These ratios are measured from the system stacks below and are
+    deliberately pessimistic.
+    """
+    ratio = 0.60 if family == "mono" else 0.55
+    end = x + len(string) * size * ratio
+    if end > RIGHT_EDGE:
+        print(f"  overflow: {where or string!r} ends near {end:.0f}px, "
+              f"margin is {RIGHT_EDGE}px", file=sys.stderr)
+    return string
+
+
+def centred(cx, string, size, family=None, where=""):
+    """Same guard as fits(), for text that grows from its own centre."""
+    ratio = 0.60 if family == "mono" else 0.55
+    half = len(string) * size * ratio / 2
+    if cx - half < W - RIGHT_EDGE or cx + half > RIGHT_EDGE:
+        print(f"  overflow: centred {where or string!r} spans "
+              f"{cx - half:.0f}..{cx + half:.0f}px", file=sys.stderr)
+    return string
 
 
 def esc(s):
@@ -65,20 +94,162 @@ def text(x, y, s, size=26, fill=TEXT, family=SANS, weight=400, extra=""):
 
 
 # --------------------------------------------------------------------- panels
-STACK = [("Warehouse", "Snowflake · PostgreSQL"), ("Transform", "dbt · SQL · Python"),
-         ("Orchestration", "Dagster"), ("Ingestion", "Airbyte"),
-         ("BI", "Lightdash"), ("Runtime", "Docker · Linux")]
+STACK = [
+    ("Warehouse", "Snowflake · DuckDB · PostgreSQL"),
+    ("Transform", "dbt — models, macros, snapshots, contracts"),
+    ("Orchestration", "Dagster — assets, partitions, sensors"),
+    ("Ingestion", "Airbyte, self-hosted"),
+    ("Quality", "dbt-expectations · Elementary · pytest"),
+    ("Semantics & BI", "dbt Semantic Layer · MetricFlow · Lightdash"),
+    ("Interfaces", "FastAPI · SQLAlchemy"),
+    ("Runtime", "Docker · Linux · GitHub Actions"),
+]
 
 
 def stack_panel():
-    x0, colw, rowh, y0 = 64, 400, 78, 116
+    """One column with a fixed label gutter: the two-column version clipped
+    'dbt Semantic Layer, MetricFlow, Lightdash' at the panel edge."""
+    x0, gutter, rowh, y0 = 64, 210, 54, 116
     parts = [eyebrow(x0, 62, "stack")]
     for i, (k, v) in enumerate(STACK):
-        x, y = x0 + (i % 2) * colw, y0 + (i // 2) * rowh
-        parts.append(f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="15" '
-                     f'letter-spacing="1.6" fill="{MUTED}">{esc(k.upper())}</text>')
-        parts.append(text(x, y + 32, v, size=25))
-    return panel(y0 + 2 * rowh + 44, "".join(parts))
+        y = y0 + i * rowh
+        parts.append(f'<text x="{x0}" y="{y}" font-family="{MONO}" font-size="15" '
+                     f'letter-spacing="1.4" fill="{MUTED}">{esc(k.upper())}</text>')
+        fits(x0 + gutter, v, 21, where=f"stack/{k}")
+        parts.append(text(x0 + gutter, y, v, size=21))
+    return panel(y0 + (len(STACK) - 1) * rowh + 48, "".join(parts))
+
+
+def pipeline_panel():
+    """The shape of the pipeline the roadmap repository builds up to.
+
+    Drawn by hand rather than with mermaid: GitHub renders mermaid in its own
+    colours, which would leave one element on the page fighting the palette.
+    Stages sit on a rail rather than in boxes — five boxes across 732px left
+    the labels wider than the boxes holding them.
+    """
+    name = "analytics-engineer-roadmap"
+    d = gh(f"repos/{USER}/{name}")
+    when = datetime.strptime(d["pushed_at"], "%Y-%m-%dT%H:%M:%SZ").strftime("%b %Y")
+
+    stages = [("SOURCE", "gh_events"), ("RAW", "json payload"),
+              ("STAGING", "flatten · dedupe"), ("MARTS", "incremental"),
+              ("SERVING", "Lightdash · API")]
+    x0 = 64
+    # the rail is inset from the panel margin by half of the widest end label,
+    # otherwise "SOURCE" runs into the accent hairline and "Lightdash · API"
+    # runs off the right edge
+    inset = 72
+    first, last = x0 + inset, W - x0 - inset
+    step = (last - first) / (len(stages) - 1)
+    rail = 268
+
+    parts = [eyebrow(x0, 62, "current work"),
+             text(x0, 108, name, size=30),
+             text(x0, 142, "One pipeline, reproducible from a clean checkout: ingest, model, "
+                           "test, orchestrate.", size=20, fill=MUTED)]
+
+    # orchestration bracket over the whole rail
+    parts.append(f'<path d="M{x0} {rail - 46} v-12 H{W - x0} v12" fill="none" '
+                 f'stroke="{LINE}" stroke-width="1.5"/>')
+    parts.append(f'<text x="{W / 2}" y="{rail - 68}" text-anchor="middle" '
+                 f'font-family="{MONO}" font-size="15" letter-spacing="1.8" fill="{MUTED}">'
+                 f'DAGSTER · PARTITIONED BY DAY · IDEMPOTENT BACKFILL</text>')
+
+    parts.append(f'<path d="M{first} {rail} H{last}" stroke="{LINE}" stroke-width="1.5"/>')
+    for i, (label, sub) in enumerate(stages):
+        cx = first + i * step
+        centred(cx, label, 17, "mono", f"pipeline/{label}")
+        centred(cx, sub, 16, where=f"pipeline/{label} caption")
+        parts.append(f'<circle cx="{cx:.1f}" cy="{rail}" r="6" fill="{BG}" '
+                     f'stroke="{ACCENT}" stroke-width="2"/>')
+        parts.append(f'<text x="{cx:.1f}" y="{rail - 22}" text-anchor="middle" '
+                     f'font-family="{MONO}" font-size="17" letter-spacing="1.4" '
+                     f'fill="{TEXT}">{esc(label)}</text>')
+        parts.append(f'<text x="{cx:.1f}" y="{rail + 32}" text-anchor="middle" '
+                     f'font-family="{SANS}" font-size="16" fill="{MUTED}">{esc(sub)}</text>')
+        if i < len(stages) - 1:
+            mx = cx + step / 2
+            parts.append(f'<path d="M{mx - 4:.1f} {rail - 5} l6 5 -6 5" fill="none" '
+                         f'stroke="{ACCENT}" stroke-width="1.6" stroke-linejoin="round" '
+                         f'stroke-linecap="round"/>')
+
+    qy = rail + 66
+    parts.append(f'<path d="M{x0} {qy} v12 H{W - x0} v-12" fill="none" stroke="{LINE}" '
+                 f'stroke-width="1.5" stroke-dasharray="3 5"/>')
+    parts.append(f'<text x="{W / 2}" y="{qy + 38}" text-anchor="middle" font-family="{MONO}" '
+                 f'font-size="15" letter-spacing="1.8" fill="{MUTED}">'
+                 f'30 TESTS IN THREE LAYERS · CI ON EVERY PULL REQUEST</text>')
+
+    foot = qy + 78
+    parts.append(f'<circle cx="{x0 + 6}" cy="{foot - 5}" r="6" fill="{ACCENT}"/>')
+    line = f"Python · DuckDB locally, Snowflake by changing a target · pushed {when}"
+    fits(x0 + 24, line, 17, where="pipeline/footer")
+    parts.append(text(x0 + 24, foot, line, size=17, fill=MUTED))
+    return panel(foot + 34, "".join(parts))
+
+
+QUALITY = [
+    ("dbt core tests", "Is this row valid?", "unique, not_null, accepted_values"),
+    ("dbt-expectations", "Is this value plausible?", "row counts, payload size in range"),
+    ("Elementary", "Does today look like yesterday?", "volume drops, mean shift, null spikes"),
+    ("Dagster asset checks", "Should downstream run at all?", "raw not empty, source fresh"),
+]
+
+
+def quality_panel():
+    x0, y0, rowh = 64, 120, 78
+    parts = [eyebrow(x0, 62, "how the data is checked"),
+             text(x0, 96, "Four layers, each catching what the others miss.", size=20, fill=MUTED)]
+    for i, (layer, question, example) in enumerate(QUALITY):
+        y = y0 + 40 + i * rowh
+        parts.append(f'<rect x="{x0}" y="{y - 26}" width="4" height="42" rx="2" '
+                     f'fill="{RAMP[i]}"/>')
+        fits(x0 + 22, question, 22, where=f"quality/{layer}")
+        parts.append(text(x0 + 22, y, question, size=22))
+        parts.append(f'<text x="{x0 + 22}" y="{y + 24}" font-family="{MONO}" font-size="15" '
+                     f'letter-spacing="1.2" fill="{MUTED}">{esc(layer.upper())}'
+                     f'<tspan fill="{LINE}">  ·  </tspan>{esc(example)}</text>')
+    return panel(y0 + 40 + len(QUALITY) * rowh + 6, "".join(parts))
+
+
+JOURNEY = [
+    ("done", "Foundations", "SQL to window functions and EXPLAIN, Python to Polars and Pydantic"),
+    ("done", "dbt, end to end", "Models, macros, snapshots, data contracts, CI on pull requests"),
+    ("done", "Orchestration and cloud", "Dagster assets and partitions, Snowflake, self-hosted Airbyte"),
+    ("now", "Snowflake architecture", "Time travel, zero-copy clone, streams and tasks"),
+    ("next", "Semantics and BI", "MetricFlow, Lightdash, a data API, portfolio projects"),
+]
+
+
+def journey_panel():
+    x0, y0, rowh = 64, 116, 76
+    parts = [eyebrow(x0, 62, "the way through")]
+    last = len(JOURNEY) - 1
+    for i, (state, title, detail) in enumerate(JOURNEY):
+        y = y0 + i * rowh
+        cx, cy = x0 + 7, y - 6
+        if i != last:
+            parts.append(f'<path d="M{cx} {cy + 12} V{cy + rowh - 12}" stroke="{LINE}" '
+                         f'stroke-width="1.5"/>')
+        if state == "done":
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="7" fill="{ACCENT}" opacity="0.55"/>')
+        elif state == "now":
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="7" fill="{BG}" stroke="{ACCENT}" '
+                         f'stroke-width="2.5"/>')
+        else:
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="6" fill="none" stroke="{LINE}" '
+                         f'stroke-width="1.5"/>')
+        fill = TEXT if state != "next" else MUTED
+        parts.append(text(x0 + 32, y, title, size=23, fill=fill))
+        if state == "now":
+            parts.append(f'<text x="{x0 + 32 + 11.5 * len(title)}" y="{y}" '
+                         f'font-family="{MONO}" font-size="15" letter-spacing="1.6" '
+                         f'fill="{ACCENT}">   NOW</text>')
+        fits(x0 + 32, detail, 18, where=f"journey/{title}")
+        parts.append(f'<text x="{x0 + 32}" y="{y + 26}" font-family="{SANS}" font-size="18" '
+                     f'fill="{MUTED}">{esc(detail)}</text>')
+    return panel(y0 + last * rowh + 62, "".join(parts))
 
 
 def activity_panel():
@@ -130,23 +301,6 @@ def activity_panel():
     return panel(legend_y + 34, "".join(parts))
 
 
-def repo_panel():
-    name = "analytics-engineer-roadmap"
-    d = gh(f"repos/{USER}/{name}")
-    langs = gh(f"repos/{USER}/{name}/languages")
-    lang = max(langs, key=langs.get) if langs else "—"
-    when = datetime.strptime(d["pushed_at"], "%Y-%m-%dT%H:%M:%SZ").strftime("%b %Y").upper()
-    body = (eyebrow(64, 62, "current work")
-            + text(64, 110, name, size=30)
-            + text(64, 146, "Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day",
-                   size=20, fill=MUTED)
-            + f'<circle cx="70" cy="184" r="6" fill="{ACCENT}"/>'
-            + f'<text x="88" y="190" font-family="{MONO}" font-size="15" letter-spacing="1.6" '
-              f'fill="{MUTED}">{esc(lang.upper())}<tspan fill="{LINE}">  ·  </tspan>'
-              f'LAST PUSH {when}</text>')
-    return panel(224, body)
-
-
 # ------------------------------------------------------------------- plumbing
 def emit(prefix, svg):
     """Writes assets/<prefix>.<hash>.svg and drops older builds of that panel."""
@@ -169,9 +323,11 @@ def render_readme(paths):
 
 if __name__ == "__main__":
     paths = {
+        "pipeline": emit("pipeline", pipeline_panel()),
         "stack": emit("stack", stack_panel()),
+        "quality": emit("quality", quality_panel()),
+        "journey": emit("journey", journey_panel()),
         "activity": emit("activity", activity_panel()),
-        "repo": emit("repo", repo_panel()),
     }
     render_readme(paths)
     print("\n".join(f"{k:10} {v}" for k, v in paths.items()))
