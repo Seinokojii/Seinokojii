@@ -74,5 +74,5 @@ if __name__ == "__main__":
     stack_panel(os.path.join(HERE, "stack.svg"))
     repo_card("analytics-engineer-roadmap",
               "Snowflake, dbt, Dagster, Airbyte and Lightdash, wired up day by day",
-              os.path.join(HERE, "repo-roadmap.svg"))
+              os.path.join(HERE, "repository.svg"))
     print("panels rebuilt")
