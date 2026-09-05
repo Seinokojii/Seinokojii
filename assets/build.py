@@ -220,6 +220,50 @@ def quality_panel():
     return panel(y0 + 40 + len(QUALITY) * rowh + 6, "".join(parts))
 
 
+FINDINGS = [
+    ("Retention that grows", "11 \u2192 32 \u2192 51 \u2192 71 users in one cohort",
+     "subscription start_date was generated independently of signup_date, so cohort "
+     "metrics could not be computed at all; the dashboard says so instead of drawing "
+     "a curve that would look fine and mean nothing"),
+    ("A cohort model stuck at month zero", "every cohort: one row, 100 %",
+     "month_num was measured from the subscription's own start_date, and a not_null "
+     "test passed the whole time; rewritten as a survival curve, guarded by a test "
+     "that fails if retention ever rises"),
+]
+
+
+def finding_panel():
+    """The two defects found on the way to the dashboard.
+
+    A chart screenshot shows none of this, and it is the part of the work that
+    an interview actually digs into.
+    """
+    x0, y0, rowh = 64, 132, 138
+    parts = [eyebrow(x0, 62, "what the charts did not show"),
+             text(x0, 96, "Two defects found while building the dashboard.", size=20, fill=MUTED)]
+    for i, (title, figure, detail) in enumerate(FINDINGS):
+        y = y0 + i * rowh
+        parts.append(f'<rect x="{x0}" y="{y - 24}" width="4" height="96" rx="2" fill="{RAMP[3 - i]}"/>')
+        fits(x0 + 22, title, 23, where=f"finding/{title}")
+        parts.append(text(x0 + 22, y, title, size=23))
+        parts.append(f'<text x="{x0 + 22}" y="{y + 26}" font-family="{MONO}" font-size="15" '
+                     f'letter-spacing="1.2" fill="{ACCENT}">{esc(figure)}</text>')
+        # SVG has no line breaks, so the detail is wrapped by hand
+        words, lines, cur = detail.split(), [], ""
+        for w in words:
+            if len(cur) + len(w) + 1 > 76:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = (cur + " " + w).strip()
+        lines.append(cur)
+        for j, ln in enumerate(lines[:3]):
+            fits(x0 + 22, ln, 17, where=f"finding/{title} line {j}")
+            parts.append(f'<text x="{x0 + 22}" y="{y + 52 + j * 22}" font-family="{SANS}" '
+                         f'font-size="17" fill="{MUTED}">{esc(ln)}</text>')
+    return panel(y0 + len(FINDINGS) * rowh + 6, "".join(parts))
+
+
 JOURNEY = [
     ("done", "Foundations", "SQL to window functions and EXPLAIN, Python to Polars and Pydantic"),
     ("done", "dbt, end to end", "Models, macros, snapshots, data contracts, CI on pull requests"),
@@ -376,6 +420,7 @@ if __name__ == "__main__":
         "pipeline": emit("pipeline", pipeline_panel()),
         "stack": emit("stack", stack_panel()),
         "quality": emit("quality", quality_panel()),
+        "finding": emit("finding", finding_panel()),
         "journey": emit("journey", journey_panel()),
         "activity": emit("activity", activity_panel()),
     }

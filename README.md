@@ -6,6 +6,8 @@ I build the layer between raw data and the numbers people actually trust. Ingest
 modelling, tests, orchestration, and a BI surface that does not lie — assembled in the
 open, one working piece at a time, and reproducible from a clean checkout.
 
+**[Live dashboard](https://seinokojii.github.io/analytics-engineer-roadmap/)** · [dbt docs](https://seinokojii.github.io/analytics-engineer-roadmap/dbt/) · [CV](https://seinokojii.github.io/analytics-engineer-roadmap/cv/)
+
 <br>
 
 <a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/pipeline.8863a254.svg" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
@@ -23,6 +25,10 @@ open, one working piece at a time, and reproducible from a clean checkout.
 <br>
 
 <img src="./assets/quality.9a8f0a8c.svg" width="100%" alt="Four layers of data checks: dbt core tests ask whether a row is valid, dbt-expectations whether a value is plausible, Elementary whether today looks like yesterday, and Dagster asset checks whether downstream should run at all.">
+
+<br>
+
+<img src="./assets/finding.2ad550fc.svg" width="100%" alt="Two defects found while building the dashboard: retention that grew because subscription dates were generated independently of signup, and a cohort model that only ever produced month zero.">
 
 <br>
 
@@ -52,7 +58,7 @@ that only works on my machine.
 
 <br>
 
-<img src="./assets/activity.b1797450.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.b071cd31.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
