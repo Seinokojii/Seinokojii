@@ -15,11 +15,11 @@ open, one working piece at a time, and reproducible from a clean checkout.
 ### Recent work
 
 <!-- recent starts -->
+- [Days 97-98 Performance Tuning](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/746616b2637566beb8b8cf198a6d05904f05c997) &nbsp;<sub>16 Sep 2026</sub>
 - [Days 94-96 Streams + Tasks](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/0febafa083e7823b39a901b62b78bd9d513d4406) &nbsp;<sub>02 Sep 2026</sub>
 - [Days 91-93 Time Travel + Zero Copy Clone](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/354f44df208143d735614b3db5e1a2386091cda1) &nbsp;<sub>22 Aug 2026</sub>
 - [Days 89-90 documentation + GitHub](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/64fd4facec9c2b5bf0ef65c3b96195d843a610a8) &nbsp;<sub>13 Aug 2026</sub>
 - [Days 86-88 testing + monitoring (dbt-expectations, Elementary, CI, Docker)](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/295426433feaa7d4c3b33ca14c3a6f8b98b2ed69) &nbsp;<sub>12 Aug 2026</sub>
-- [Days 81-85 production pipeline Airbyte → dbt → marts on Dagster](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/be5f6cd4b39d87877b9fb06968e175f5b31cb2ec) &nbsp;<sub>07 Aug 2026</sub>
 <!-- recent ends -->
 
 <br>
@@ -58,7 +58,7 @@ that only works on my machine.
 
 <br>
 
-<img src="./assets/activity.125a8ba2.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.1e05593f.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
