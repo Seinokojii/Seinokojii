@@ -10,7 +10,7 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/pipeline.8863a254.svg" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
+<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/pipeline.ef5004c0.svg" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
 
 ### Recent work
 
@@ -58,7 +58,7 @@ that only works on my machine.
 
 <br>
 
-<img src="./assets/activity.03a456f4.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.17d42426.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
