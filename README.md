@@ -58,7 +58,7 @@ that only works on my machine.
 
 <br>
 
-<img src="./assets/activity.ee31fcd3.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.cdd2e5bc.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
