@@ -1,68 +1,56 @@
-<img src="./banner.png" width="100%" alt="Seinokojii — Analytics Engineer">
+<img src="./banner.png" width="100%" alt="Seinokojii — AI Engineer">
 
 <br>
 
-I build the layer between raw data and the numbers people actually trust. Ingestion,
-modelling, tests, orchestration, and a BI surface that does not lie — assembled in the
-open, one working piece at a time, and reproducible from a clean checkout.
-
-**[Live dashboard](https://seinokojii.github.io/analytics-engineer-roadmap/)** · [dbt docs](https://seinokojii.github.io/analytics-engineer-roadmap/dbt/) · [CV](https://seinokojii.github.io/analytics-engineer-roadmap/cv/)
+I am moving from analytics engineering into AI engineering, in the open. The rule stays
+the same as before: if a change cannot be measured, it is not an improvement yet. So every
+model call logs its tokens, latency and cost, and every project ships with evals that can
+fail the build.
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="./assets/pipeline.ef5004c0.svg" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
+<a href="https://github.com/Seinokojii/ai-engineer-roadmap"><img src="./assets/pipeline.f1761370.svg" width="100%" alt="What I am building: ai-engineer-roadmap. Data, retrieval, a local-first model, schema checks and guardrails, then serving through an API and Telegram. Tokens, latency and cost are logged on every call, and evals run on every change."></a>
 
 ### Recent work
 
 <!-- recent starts -->
-- [Days 97-98 Performance Tuning](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/746616b2637566beb8b8cf198a6d05904f05c997) &nbsp;<sub>16 Sep 2026</sub>
-- [Days 94-96 Streams + Tasks](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/0febafa083e7823b39a901b62b78bd9d513d4406) &nbsp;<sub>02 Sep 2026</sub>
-- [Days 91-93 Time Travel + Zero Copy Clone](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/354f44df208143d735614b3db5e1a2386091cda1) &nbsp;<sub>22 Aug 2026</sub>
-- [Days 89-90 documentation + GitHub](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/64fd4facec9c2b5bf0ef65c3b96195d843a610a8) &nbsp;<sub>13 Aug 2026</sub>
-- [Days 86-88 testing + monitoring (dbt-expectations, Elementary, CI, Docker)](https://github.com/Seinokojii/analytics-engineer-roadmap/commit/295426433feaa7d4c3b33ca14c3a6f8b98b2ed69) &nbsp;<sub>12 Aug 2026</sub>
+_The first study days land here as they are committed._
 <!-- recent ends -->
 
 <br>
 
-<img src="./assets/quality.9a8f0a8c.svg" width="100%" alt="Four layers of data checks: dbt core tests ask whether a row is valid, dbt-expectations whether a value is plausible, Elementary whether today looks like yesterday, and Dagster asset checks whether downstream should run at all.">
-
-<br>
-
-<img src="./assets/finding.2ad550fc.svg" width="100%" alt="Two defects found while building the dashboard: retention that grew because subscription dates were generated independently of signup, and a cohort model that only ever produced month zero.">
-
-<br>
-
-<img src="./assets/journey.da508ee5.svg" width="100%" alt="Progress through the roadmap: foundations, dbt end to end, orchestration and cloud are done; Snowflake architecture is current; semantics and BI come next.">
+<img src="./assets/journey.cc78672c.svg" width="100%" alt="The way through: foundations now; then evals, retrieval and RAG, tools and agents with MCP, production, and middle-level topics.">
 
 <details>
-<summary>The full curriculum, block by block</summary>
+<summary>The full plan, part by part</summary>
 
 <br>
 
 | Block | Days | Covered |
 |---|---|---|
-| **Foundations** | Days 1-30 | SQL from joins to window functions, Python to pandas and Polars, first ETL patterns |
-| **Advanced SQL, testing, dbt** | Days 31-60 | Recursive CTEs, QUALIFY, MERGE, EXPLAIN ANALYZE; dbt models, macros, snapshots, contracts; pytest and Great Expectations |
-| **Orchestration and cloud** | Days 61-90 | Dagster software-defined assets, partitions and sensors; Snowflake architecture and loading; self-hosted Airbyte; the first end-to-end pipeline with tests, CI and docs |
-| **Snowflake architecture** | Days 91-130 | Time travel, zero-copy clone, streams and tasks, Snowpipe; medallion layering; MetricFlow; FastAPI as a data API |
-| **Semantics, BI and portfolio** | Days 131-165 | Lightdash on top of the semantic layer, then three portfolio builds |
+| **Foundations** | Days 1-30 | Python for AI code, tokens and sampling, a thin client over local and hosted models, structured output, a review classifier |
+| **Evals** | Days 31-50 | Metrics and datasets, LLM-as-judge checked against human labels, error analysis, evals in CI — and evalkit, used by everything after it |
+| **Retrieval and RAG** | Days 51-85 | Embeddings, chunking, pgvector, hybrid search and reranking, retrieval and faithfulness evals, incremental indexing |
+| **Tools, agents, MCP** | Days 86-110 | Tool calling, an agent loop written by hand, workflows versus agents, an MCP server, agent evals, human-in-the-loop |
+| **Production** | Days 111-145 | FastAPI, Docker, fallbacks and rate limits, tracing, caching, cost routing, prompt-injection tests, deploy with an eval gate |
+| **Middle level** | Days 146-180 | Quantised local inference, LoRA against a prompting baseline, multimodal extraction, five written system designs |
 
-Each block ends with a project that has to run from a clean checkout, not a notebook
-that only works on my machine.
+Three projects instead of ten: a review classifier, an eval harness every later part uses,
+and one retrieval product that grows from search to an agent to a deployed service.
 
 </details>
 
 <br>
 
-<img src="./assets/stack.6f139fcf.svg" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
+<img src="./assets/stack.88cedbc6.svg" width="100%" alt="Stack: Python 3.12, uv, pytest, ruff; Ollama locally first and hosted free tiers second; pydantic schemas; evalkit; PostgreSQL, pgvector, full-text search, reranking; tool calling, an own agent loop, MCP; FastAPI, Docker, OpenTelemetry, Langfuse; background in SQL, dbt and Dagster.">
 
 <br>
 
-<img src="./assets/activity.78dd9c39.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.ae9249ac.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
-A test suite that has never failed is an unverified test suite, so the roadmap repository
-corrupts its own warehouse on purpose, asserts the tests go red, and restores it.
+Before this: a full analytics engineering pipeline — [live dashboard](https://seinokojii.github.io/analytics-engineer-roadmap/) ·
+[dbt docs](https://seinokojii.github.io/analytics-engineer-roadmap/dbt/) · [repository](https://github.com/Seinokojii/analytics-engineer-roadmap).
 
-<sub>アナリティクス・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　this page rebuilds itself nightly from the GitHub API — <a href="./assets/build.py">assets/build.py</a></sub>
+<sub>AI・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　this page rebuilds itself nightly from the GitHub API — <a href="./assets/build.py">assets/build.py</a></sub>

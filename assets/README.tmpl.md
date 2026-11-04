@@ -1,16 +1,15 @@
-<img src="./banner.png" width="100%" alt="Seinokojii — Analytics Engineer">
+<img src="./banner.png" width="100%" alt="Seinokojii — AI Engineer">
 
 <br>
 
-I build the layer between raw data and the numbers people actually trust. Ingestion,
-modelling, tests, orchestration, and a BI surface that does not lie — assembled in the
-open, one working piece at a time, and reproducible from a clean checkout.
-
-**[Live dashboard](https://seinokojii.github.io/analytics-engineer-roadmap/)** · [dbt docs](https://seinokojii.github.io/analytics-engineer-roadmap/dbt/) · [CV](https://seinokojii.github.io/analytics-engineer-roadmap/cv/)
+I am moving from analytics engineering into AI engineering, in the open. The rule stays
+the same as before: if a change cannot be measured, it is not an improvement yet. So every
+model call logs its tokens, latency and cost, and every project ships with evals that can
+fail the build.
 
 <br>
 
-<a href="https://github.com/Seinokojii/analytics-engineer-roadmap"><img src="{{pipeline}}" width="100%" alt="Current work: analytics-engineer-roadmap. Source to raw to staging to marts to serving, orchestrated by Dagster, partitioned by day, with 30 tests in three layers and CI on every pull request."></a>
+<a href="https://github.com/Seinokojii/ai-engineer-roadmap"><img src="{{pipeline}}" width="100%" alt="What I am building: ai-engineer-roadmap. Data, retrieval, a local-first model, schema checks and guardrails, then serving through an API and Telegram. Tokens, latency and cost are logged on every call, and evals run on every change."></a>
 
 ### Recent work
 
@@ -20,31 +19,23 @@ open, one working piece at a time, and reproducible from a clean checkout.
 
 <br>
 
-<img src="{{quality}}" width="100%" alt="Four layers of data checks: dbt core tests ask whether a row is valid, dbt-expectations whether a value is plausible, Elementary whether today looks like yesterday, and Dagster asset checks whether downstream should run at all.">
-
-<br>
-
-<img src="{{finding}}" width="100%" alt="Two defects found while building the dashboard: retention that grew because subscription dates were generated independently of signup, and a cohort model that only ever produced month zero.">
-
-<br>
-
-<img src="{{journey}}" width="100%" alt="Progress through the roadmap: foundations, dbt end to end, orchestration and cloud are done; Snowflake architecture is current; semantics and BI come next.">
+<img src="{{journey}}" width="100%" alt="The way through: foundations now; then evals, retrieval and RAG, tools and agents with MCP, production, and middle-level topics.">
 
 <details>
-<summary>The full curriculum, block by block</summary>
+<summary>The full plan, part by part</summary>
 
 <br>
 
 {{curriculum}}
 
-Each block ends with a project that has to run from a clean checkout, not a notebook
-that only works on my machine.
+Three projects instead of ten: a review classifier, an eval harness every later part uses,
+and one retrieval product that grows from search to an agent to a deployed service.
 
 </details>
 
 <br>
 
-<img src="{{stack}}" width="100%" alt="Stack: Snowflake, DuckDB, PostgreSQL; dbt; Dagster; Airbyte; dbt-expectations, Elementary, pytest; dbt Semantic Layer, MetricFlow, Lightdash; FastAPI, SQLAlchemy; Docker, Linux, GitHub Actions.">
+<img src="{{stack}}" width="100%" alt="Stack: Python 3.12, uv, pytest, ruff; Ollama locally first and hosted free tiers second; pydantic schemas; evalkit; PostgreSQL, pgvector, full-text search, reranking; tool calling, an own agent loop, MCP; FastAPI, Docker, OpenTelemetry, Langfuse; background in SQL, dbt and Dagster.">
 
 <br>
 
@@ -52,7 +43,7 @@ that only works on my machine.
 
 <br>
 
-A test suite that has never failed is an unverified test suite, so the roadmap repository
-corrupts its own warehouse on purpose, asserts the tests go red, and restores it.
+Before this: a full analytics engineering pipeline — [live dashboard](https://seinokojii.github.io/analytics-engineer-roadmap/) ·
+[dbt docs](https://seinokojii.github.io/analytics-engineer-roadmap/dbt/) · [repository](https://github.com/Seinokojii/analytics-engineer-roadmap).
 
-<sub>アナリティクス・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　this page rebuilds itself nightly from the GitHub API — <a href="./assets/build.py">assets/build.py</a></sub>
+<sub>AI・エンジニア　·　<a href="https://github.com/Seinokojii?tab=repositories">repositories</a>　·　this page rebuilds itself nightly from the GitHub API — <a href="./assets/build.py">assets/build.py</a></sub>

@@ -21,6 +21,7 @@ import sys
 from datetime import datetime
 
 USER = "Seinokojii"
+REPO = "ai-engineer-roadmap"
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 
@@ -102,14 +103,14 @@ def text(x, y, s, size=26, fill=TEXT, family=SANS, weight=400, extra=""):
 
 # --------------------------------------------------------------------- panels
 STACK = [
-    ("Warehouse", "Snowflake · DuckDB · PostgreSQL"),
-    ("Transform", "dbt — models, macros, snapshots, contracts"),
-    ("Orchestration", "Dagster — assets, partitions, sensors"),
-    ("Ingestion", "Airbyte, self-hosted"),
-    ("Quality", "dbt-expectations · Elementary · pytest"),
-    ("Semantics & BI", "dbt Semantic Layer · MetricFlow · Lightdash"),
-    ("Interfaces", "FastAPI · SQLAlchemy"),
-    ("Runtime", "Docker · Linux · GitHub Actions"),
+    ("Language", "Python 3.12 · uv · pytest · ruff"),
+    ("Models", "Ollama locally first, hosted free tiers second"),
+    ("Contracts", "pydantic schemas for every model response"),
+    ("Evals", "evalkit — datasets, metrics, judges, CI gate"),
+    ("Retrieval", "PostgreSQL · pgvector · full-text · reranking"),
+    ("Agents", "tool calling, an own agent loop, MCP"),
+    ("Serving", "FastAPI · Docker · OpenTelemetry · Langfuse"),
+    ("Background", "SQL · dbt · Dagster — analytics engineering"),
 ]
 
 
@@ -128,40 +129,40 @@ def stack_panel():
 
 
 def pipeline_panel():
-    """The shape of the pipeline the roadmap repository builds up to.
+    """The shape of the system the roadmap builds up to, one part at a time.
 
     Drawn by hand rather than with mermaid: GitHub renders mermaid in its own
     colours, which would leave one element on the page fighting the palette.
     Stages sit on a rail rather than in boxes — five boxes across 732px left
     the labels wider than the boxes holding them.
     """
-    name = "analytics-engineer-roadmap"
-    d = gh(f"repos/{USER}/{name}")
-    when = datetime.strptime(d["pushed_at"], "%Y-%m-%dT%H:%M:%SZ").strftime("%b %Y")
+    name = REPO
+    try:
+        d = gh(f"repos/{USER}/{name}")
+        when = "pushed " + datetime.strptime(d["pushed_at"], "%Y-%m-%dT%H:%M:%SZ").strftime("%b %Y")
+    except subprocess.CalledProcessError:
+        when = "started Nov 2026"   # the repository is not public yet
 
-    stages = [("SOURCE", "gh_events"), ("RAW", "json payload"),
-              ("STAGING", "flatten · dedupe"), ("MARTS", "incremental"),
-              ("SERVING", "Lightdash · API")]
+    stages = [("DATA", "notes · reviews"), ("RETRIEVE", "hybrid · rerank"),
+              ("MODEL", "local first"), ("CHECK", "schema · guardrails"),
+              ("SERVE", "API · Telegram")]
     x0 = 64
-    # the rail is inset from the panel margin by half of the widest end label,
-    # otherwise "SOURCE" runs into the accent hairline and "Lightdash · API"
-    # runs off the right edge
+    # the rail is inset from the panel margin by half of the widest end label
     inset = 72
     first, last = x0 + inset, W - x0 - inset
     step = (last - first) / (len(stages) - 1)
     rail = 268
 
-    parts = [eyebrow(x0, 62, "current work"),
+    parts = [eyebrow(x0, 62, "what I am building"),
              text(x0, 108, name, size=30),
-             text(x0, 142, "One pipeline, reproducible from a clean checkout: ingest, model, "
-                           "test, orchestrate.", size=20, fill=MUTED)]
+             text(x0, 142, "From analytics engineering to AI engineering, one tested piece "
+                           "at a time.", size=20, fill=MUTED)]
 
-    # orchestration bracket over the whole rail
     parts.append(f'<path d="M{x0} {rail - 46} v-12 H{W - x0} v12" fill="none" '
                  f'stroke="{LINE}" stroke-width="1.5"/>')
     parts.append(f'<text x="{W / 2}" y="{rail - 68}" text-anchor="middle" '
                  f'font-family="{MONO}" font-size="15" letter-spacing="1.8" fill="{MUTED}">'
-                 f'DAGSTER · PARTITIONED BY DAY · IDEMPOTENT BACKFILL</text>')
+                 f'TOKENS · LATENCY · COST LOGGED ON EVERY CALL</text>')
 
     parts.append(f'<path d="M{first} {rail} H{last}" stroke="{LINE}" stroke-width="1.5"/>')
     for i, (label, sub) in enumerate(stages):
@@ -186,90 +187,24 @@ def pipeline_panel():
                  f'stroke-width="1.5" stroke-dasharray="3 5"/>')
     parts.append(f'<text x="{W / 2}" y="{qy + 38}" text-anchor="middle" font-family="{MONO}" '
                  f'font-size="15" letter-spacing="1.8" fill="{MUTED}">'
-                 f'30 TESTS IN THREE LAYERS · CI ON EVERY PULL REQUEST</text>')
+                 f'EVALS ON EVERY CHANGE · A REGRESSION FAILS THE BUILD</text>')
 
     foot = qy + 78
     parts.append(f'<circle cx="{x0 + 6}" cy="{foot - 5}" r="6" fill="{ACCENT}"/>')
-    line = f"Python · DuckDB locally, Snowflake by changing a target · pushed {when}"
+    line = f"Python 3.12 · uv · free models, local first · {when}"
     fits(x0 + 24, line, 17, where="pipeline/footer")
     parts.append(text(x0 + 24, foot, line, size=17, fill=MUTED))
     return panel(foot + 34, "".join(parts), hairline=True, fill=HERO)
 
 
-QUALITY = [
-    ("dbt core tests", "Is this row valid?", "unique, not_null, accepted_values"),
-    ("dbt-expectations", "Is this value plausible?", "row counts, payload size in range"),
-    ("Elementary", "Does today look like yesterday?", "volume drops, mean shift, null spikes"),
-    ("Dagster asset checks", "Should downstream run at all?", "raw not empty, source fresh"),
-]
-
-
-def quality_panel():
-    x0, y0, rowh = 64, 120, 78
-    parts = [eyebrow(x0, 62, "how the data is checked"),
-             text(x0, 96, "Four layers, each catching what the others miss.", size=20, fill=MUTED)]
-    for i, (layer, question, example) in enumerate(QUALITY):
-        y = y0 + 40 + i * rowh
-        parts.append(f'<rect x="{x0}" y="{y - 26}" width="4" height="42" rx="2" '
-                     f'fill="{RAMP[i]}"/>')
-        fits(x0 + 22, question, 22, where=f"quality/{layer}")
-        parts.append(text(x0 + 22, y, question, size=22))
-        parts.append(f'<text x="{x0 + 22}" y="{y + 24}" font-family="{MONO}" font-size="15" '
-                     f'letter-spacing="1.2" fill="{MUTED}">{esc(layer.upper())}'
-                     f'<tspan fill="{LINE}">  ·  </tspan>{esc(example)}</text>')
-    return panel(y0 + 40 + len(QUALITY) * rowh + 6, "".join(parts))
-
-
-FINDINGS = [
-    ("Retention that grows", "11 \u2192 32 \u2192 51 \u2192 71 users in one cohort",
-     "subscription start_date was generated independently of signup_date, so cohort "
-     "metrics could not be computed at all; the dashboard says so instead of drawing "
-     "a curve that would look fine and mean nothing"),
-    ("A cohort model stuck at month zero", "every cohort: one row, 100 %",
-     "month_num was measured from the subscription's own start_date, and a not_null "
-     "test passed the whole time; rewritten as a survival curve, guarded by a test "
-     "that fails if retention ever rises"),
-]
-
-
-def finding_panel():
-    """The two defects found on the way to the dashboard.
-
-    A chart screenshot shows none of this, and it is the part of the work that
-    an interview actually digs into.
-    """
-    x0, y0, rowh = 64, 132, 138
-    parts = [eyebrow(x0, 62, "what the charts did not show"),
-             text(x0, 96, "Two defects found while building the dashboard.", size=20, fill=MUTED)]
-    for i, (title, figure, detail) in enumerate(FINDINGS):
-        y = y0 + i * rowh
-        parts.append(f'<rect x="{x0}" y="{y - 24}" width="4" height="96" rx="2" fill="{RAMP[3 - i]}"/>')
-        fits(x0 + 22, title, 23, where=f"finding/{title}")
-        parts.append(text(x0 + 22, y, title, size=23))
-        parts.append(f'<text x="{x0 + 22}" y="{y + 26}" font-family="{MONO}" font-size="15" '
-                     f'letter-spacing="1.2" fill="{ACCENT}">{esc(figure)}</text>')
-        # SVG has no line breaks, so the detail is wrapped by hand
-        words, lines, cur = detail.split(), [], ""
-        for w in words:
-            if len(cur) + len(w) + 1 > 76:
-                lines.append(cur)
-                cur = w
-            else:
-                cur = (cur + " " + w).strip()
-        lines.append(cur)
-        for j, ln in enumerate(lines[:3]):
-            fits(x0 + 22, ln, 17, where=f"finding/{title} line {j}")
-            parts.append(f'<text x="{x0 + 22}" y="{y + 52 + j * 22}" font-family="{SANS}" '
-                         f'font-size="17" fill="{MUTED}">{esc(ln)}</text>')
-    return panel(y0 + len(FINDINGS) * rowh + 6, "".join(parts))
-
 
 JOURNEY = [
-    ("done", "Foundations", "SQL to window functions and EXPLAIN, Python to Polars and Pydantic"),
-    ("done", "dbt, end to end", "Models, macros, snapshots, data contracts, CI on pull requests"),
-    ("done", "Orchestration and cloud", "Dagster assets and partitions, Snowflake, self-hosted Airbyte"),
-    ("now", "Snowflake architecture", "Time travel, zero-copy clone, streams and tasks"),
-    ("next", "Semantics and BI", "MetricFlow, Lightdash, a data API, portfolio projects"),
+    ("now", "Foundations", "Python for AI work, how LLMs behave, structured output"),
+    ("next", "Evals", "Datasets, metrics, LLM-as-judge, an eval harness with a CI gate"),
+    ("next", "Retrieval and RAG", "Embeddings, hybrid search, reranking, answers with citations"),
+    ("next", "Tools, agents, MCP", "Tool calling, an agent loop with limits, an MCP server"),
+    ("next", "Production", "FastAPI, Docker, tracing, cost control, prompt-injection tests"),
+    ("next", "Middle level", "Local inference, fine-tuning against a baseline, system design"),
 ]
 
 
@@ -294,7 +229,7 @@ def journey_panel():
         fill = TEXT if state != "next" else MUTED
         parts.append(text(x0 + 32, y, title, size=23, fill=fill))
         if state == "now":
-            parts.append(f'<text x="{x0 + 32 + 11.5 * len(title)}" y="{y}" '
+            parts.append(f'<text x="{x0 + 32 + 13.2 * len(title):.0f}" y="{y}" '
                          f'font-family="{MONO}" font-size="15" letter-spacing="1.6" '
                          f'fill="{ACCENT}">   NOW</text>')
         fits(x0 + 32, detail, 18, where=f"journey/{title}")
@@ -367,26 +302,32 @@ def emit(prefix, svg):
 
 MONTHS = [
     ("Foundations", "Days 1-30",
-     "SQL from joins to window functions, Python to pandas and Polars, "
-     "first ETL patterns"),
-    ("Advanced SQL, testing, dbt", "Days 31-60",
-     "Recursive CTEs, QUALIFY, MERGE, EXPLAIN ANALYZE; dbt models, macros, "
-     "snapshots, contracts; pytest and Great Expectations"),
-    ("Orchestration and cloud", "Days 61-90",
-     "Dagster software-defined assets, partitions and sensors; Snowflake "
-     "architecture and loading; self-hosted Airbyte; the first end-to-end "
-     "pipeline with tests, CI and docs"),
-    ("Snowflake architecture", "Days 91-130",
-     "Time travel, zero-copy clone, streams and tasks, Snowpipe; medallion "
-     "layering; MetricFlow; FastAPI as a data API"),
-    ("Semantics, BI and portfolio", "Days 131-165",
-     "Lightdash on top of the semantic layer, then three portfolio builds"),
+     "Python for AI code, tokens and sampling, a thin client over local and hosted "
+     "models, structured output, a review classifier"),
+    ("Evals", "Days 31-50",
+     "Metrics and datasets, LLM-as-judge checked against human labels, error "
+     "analysis, evals in CI — and evalkit, used by everything after it"),
+    ("Retrieval and RAG", "Days 51-85",
+     "Embeddings, chunking, pgvector, hybrid search and reranking, retrieval and "
+     "faithfulness evals, incremental indexing"),
+    ("Tools, agents, MCP", "Days 86-110",
+     "Tool calling, an agent loop written by hand, workflows versus agents, an MCP "
+     "server, agent evals, human-in-the-loop"),
+    ("Production", "Days 111-145",
+     "FastAPI, Docker, fallbacks and rate limits, tracing, caching, cost routing, "
+     "prompt-injection tests, deploy with an eval gate"),
+    ("Middle level", "Days 146-180",
+     "Quantised local inference, LoRA against a prompting baseline, multimodal "
+     "extraction, five written system designs"),
 ]
 
 
 def recent_section():
     """The day-by-day log, taken from the roadmap's own feat: commits."""
-    commits = gh("repos/%s/analytics-engineer-roadmap/commits?per_page=40" % USER)
+    try:
+        commits = gh("repos/%s/%s/commits?per_page=40" % (USER, REPO))
+    except subprocess.CalledProcessError:
+        commits = []
     lines = []
     for c in commits:
         subject = c["commit"]["message"].split("\n")[0]
@@ -398,7 +339,7 @@ def recent_section():
         lines.append(f'- [{title}]({url}) &nbsp;<sub>{when.strftime("%d %b %Y")}</sub>')
         if len(lines) == 5:
             break
-    return "\n".join(lines)
+    return "\n".join(lines) or "_The first study days land here as they are committed._"
 
 
 def curriculum_section():
@@ -419,8 +360,6 @@ if __name__ == "__main__":
         "curriculum": curriculum_section(),
         "pipeline": emit("pipeline", pipeline_panel()),
         "stack": emit("stack", stack_panel()),
-        "quality": emit("quality", quality_panel()),
-        "finding": emit("finding", finding_panel()),
         "journey": emit("journey", journey_panel()),
         "activity": emit("activity", activity_panel()),
     }
