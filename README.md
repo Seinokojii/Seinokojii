@@ -14,7 +14,8 @@ fail the build.
 ### Recent work
 
 <!-- recent starts -->
-_The first study days land here as they are committed._
+- [Day 003-004 aieng.text and project exceptions](https://github.com/Seinokojii/ai-engineer-roadmap/commit/520099ad01c86e2b1cdfc3d00aee894f102dcbc0) &nbsp;<sub>07 Nov 2026</sub>
+- [Day 001-002 environment lesson](https://github.com/Seinokojii/ai-engineer-roadmap/commit/ac7701a54cd7b7e744c5a2624e00ec18ebc29e4f) &nbsp;<sub>07 Nov 2026</sub>
 <!-- recent ends -->
 
 <br>
@@ -46,7 +47,7 @@ and one retrieval product that grows from search to an agent to a deployed servi
 
 <br>
 
-<img src="./assets/activity.93cba4bf.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.e1a29e49.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
