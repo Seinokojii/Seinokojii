@@ -47,7 +47,7 @@ and one retrieval product that grows from search to an agent to a deployed servi
 
 <br>
 
-<img src="./assets/activity.e1a29e49.svg" width="100%" alt="Contribution activity over the last year">
+<img src="./assets/activity.a473f267.svg" width="100%" alt="Contribution activity over the last year">
 
 <br>
 
